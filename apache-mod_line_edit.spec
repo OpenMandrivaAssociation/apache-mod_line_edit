@@ -6,7 +6,7 @@
 Summary:	Mod_line_edit is a DSO module for the apache web server
 Name:		apache-%{mod_name}
 Version:	1.0.0
-Release:	%mkrel 1
+Release:	%mkrel 2
 Group:		System/Servers
 License:	GPL
 URL:		http://apache.webthing.com/mod_line_edit/
