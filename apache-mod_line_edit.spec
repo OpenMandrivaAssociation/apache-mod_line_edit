@@ -3,7 +3,7 @@
 %define mod_conf A95_%{mod_name}.conf
 %define mod_so %{mod_name}.so
 
-Summary:	Mod_line_edit is a DSO module for the apache web server
+Summary:	A general-purpose output filter for text documents for Apache
 Name:		apache-%{mod_name}
 Version:	1.0.0
 Release:	%mkrel 2
