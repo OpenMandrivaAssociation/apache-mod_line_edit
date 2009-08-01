@@ -6,7 +6,7 @@
 Summary:	A general-purpose output filter for text documents for Apache
 Name:		apache-%{mod_name}
 Version:	1.0.0
-Release:	%mkrel 6
+Release:	%mkrel 7
 Group:		System/Servers
 License:	GPL
 URL:		http://apache.webthing.com/mod_line_edit/
