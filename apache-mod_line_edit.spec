@@ -6,7 +6,7 @@
 Summary:	A general-purpose output filter for text documents for Apache
 Name:		apache-%{mod_name}
 Version:	1.0.0
-Release:	%mkrel 11
+Release:	11
 Group:		System/Servers
 License:	GPL
 URL:		http://apache.webthing.com/mod_line_edit/
@@ -21,7 +21,6 @@ Requires:	apache-conf >= 2.2.0
 Requires:	apache >= 2.2.0
 BuildRequires:	apache-devel >= 2.2.0
 BuildRequires:	file
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 mod_line_edit is a general-purpose filter for text documents. It operates as a
@@ -55,10 +54,9 @@ find . -type f|xargs file|grep 'text'|cut -d: -f1|xargs perl -p -i -e 's/\r//'
 head -19 %{mod_name}.c > LICENSE
 
 %build
-%{_sbindir}/apxs -c %{mod_name}.c
+%{_bindir}/apxs -c %{mod_name}.c
 
 %install
-[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
 
 install -d %{buildroot}%{_libdir}/apache-extramodules
 install -d %{buildroot}%{_sysconfdir}/httpd/modules.d
@@ -79,12 +77,70 @@ if [ "$1" = "0" ]; then
 fi
 
 %clean
-[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root)
 %doc LICENSE README.html
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/httpd/modules.d/%{mod_conf}
 %attr(0755,root,root) %{_libdir}/apache-extramodules/%{mod_so}
 
+
+
+
+%changelog
+* Sat Feb 11 2012 Oden Eriksson <oeriksson@mandriva.com> 1.0.0-11mdv2012.0
++ Revision: 772674
+- rebuild
+
+* Tue May 24 2011 Oden Eriksson <oeriksson@mandriva.com> 1.0.0-10
++ Revision: 678333
+- mass rebuild
+
+* Sun Oct 24 2010 Oden Eriksson <oeriksson@mandriva.com> 1.0.0-9mdv2011.0
++ Revision: 588017
+- rebuild
+
+* Mon Mar 08 2010 Oden Eriksson <oeriksson@mandriva.com> 1.0.0-8mdv2010.1
++ Revision: 516135
+- rebuilt for apache-2.2.15
+
+* Sat Aug 01 2009 Oden Eriksson <oeriksson@mandriva.com> 1.0.0-7mdv2010.0
++ Revision: 406604
+- rebuild
+
+* Tue Jan 06 2009 Oden Eriksson <oeriksson@mandriva.com> 1.0.0-6mdv2009.1
++ Revision: 325807
+- rebuild
+
+* Mon Jul 14 2008 Oden Eriksson <oeriksson@mandriva.com> 1.0.0-5mdv2009.0
++ Revision: 234972
+- rebuild
+
+* Thu Jun 05 2008 Oden Eriksson <oeriksson@mandriva.com> 1.0.0-4mdv2009.0
++ Revision: 215596
+- fix rebuild
+
+* Fri Mar 07 2008 Oden Eriksson <oeriksson@mandriva.com> 1.0.0-3mdv2008.1
++ Revision: 181794
+- rebuild
+
+  + Olivier Blin <blino@mandriva.org>
+    - restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+  + Michael Scherer <misc@mandriva.org>
+    - better summary
+
+* Sat Sep 08 2007 Oden Eriksson <oeriksson@mandriva.com> 1.0.0-2mdv2008.0
++ Revision: 82603
+- rebuild
+
+
+* Wed Mar 14 2007 Oden Eriksson <oeriksson@mandriva.com> 1.0.0-1mdv2007.1
++ Revision: 143722
+- Import apache-mod_line_edit
+
+* Wed Mar 14 2007 Oden Eriksson <oeriksson@mandriva.com> 1.0.0-1mdv2007.1
+- initial Mandriva package
 

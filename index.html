@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en"><head>
+<title>mod_line_edit</title>
+<style type="text/css">
+@import url(/index.css) ;
+</style>
+</head><body>
+<div id="apache">
+<h1>mod_line_edit</h1>
+<p>mod_line_edit is a general-purpose filter for text documents.
+It operates as a simple on-the-fly line editor, applying
+search-and-replace rules defined in a configuration or .htaccess
+file.</p>
+<p>Unlike most of Web&#222;ing's filter modules, it is not markup-aware,
+so it is not an optimal choice for processing HTML or XML,
+though it may nevertheless be used with caution (and may be far better
+than semi-markup-aware options such as mod_layout).
+</p><p>
+For non-markup document types such as plain text, and non-markup
+Web documents such as Javascript or Stylesheets, it is the best
+available option in the absence of a filter that parses any
+relevant document structures.</p>
+<p>mod_line_edit is written for performance and reliability,
+and should scale without problems as document size grows.
+mod_line_edit is fully compatible with Apache 2.0 and 2.2,
+and all operating systems and MPMs.</p>
+
+
+<h2>Usage</h2>
+<p><code>LoadModule line_edit_module modules/mod_line_edit.so</code></p>
+<p>The module implements a single output filter named <code>line-editor</code>.
+Insert it in the filter chain using the standard filter directives,
+e.g. to rewrite all text documents:</p>
+<pre><code>FilterProvider textedit line-editor resp=Content-Type $text/
+FilterChain textedit</code></pre>
+<p>or, for backward compatibility with Apache 2.0:</p>
+<pre><code>AddOutputFilter	line-editor	.txt .css .js</code></pre>
+<p>or</p>
+<pre><code>SetOutputFilter	line-editor
+SetEnv	LineEdit "text/plain;text/css;text/javascript"</code></pre>
+<h3>Text Editing</h3>
+<p>The <code>LERewriteRule</code> directive defines search-and-replace rules.
+Both simple text and regular expression search and replace are supported.
+</p>
+<h3>Line Modes</h3>
+<p>mod_line_edit normally applies its edits line-by-line.  This avoids
+the risk of missing a pattern to be matched because it is spread over
+more than one chunk of data when it reaches the parser, without having
+to resort to the performance and scalability limitations of loading
+an entire document into memory.</p>
+<h3>The LineEdit Environment Variable</h3>
+<p>If the <tt>LineEdit</tt> environment variable is set, it controls
+Content Types that will be filtered.  This enables it to filter
+selectively on content-type in a proxy with Apache 2.0.  Just set
+the variable to a list of content types, and mod_line_edit will
+leave other types untouched.</p>
+<p>Example: to filter plain text and javascript, but leave other types alone:
+<br /><code>SetEnv LineEdit "text/plain;text/javascript"</code></p>
+<p>This also works with Apache 2.2, but is of course unnecessary there.</p>
+<h3>Directives</h3>
+<dl>
+<dt>LELineEnd</dt>
+<dd>
+<p><code>LELineEnd UNIX|MAC|DOS|NONE|ANY|CUSTOM [char]</code></p>
+<p>This tells the parser what characters in the text to interpret
+as line-endings:</p>
+<ul>
+<li><strong>UNIX</strong> - the line end is the traditional Unix <q>\n</q>.</li>
+<li><strong>MAC</strong> - the line end is the old MacOS <q>\r</q>.
+Note that modern MacOSX is Unix-based.</li>
+<li><strong>DOS</strong> - the line end is the MSDOS and Windows sequence
+<q>\r\n</q>.</li>
+<li><strong>ANY</strong> - Any of the above will be interpreted as a line
+break (with <q>\r\n</q> treated as one, not two, linebreaks).
+This is the default.</li>
+<li><strong>NONE</strong> - This will treat the entire document as a
+single line, enabling multi-line search-and-replace.  Note that this
+will incur a <strong>substantial performance penalty</strong> for
+larger documents, as it requires an entire document to be loaded into
+memory and processed in a single operation.</li>
+<li><strong>CUSTOM</strong> - This enables you to partition the input
+by splitting on some character other than a conventional line end.</p>
+</ul>
+<p>When you use <code>LELineEnd Custom</code>, you must specify a second
+single-character argument, which is the character to split the input on.
+For all other <code>LELineEnd</code> options, any second argument will
+be ignored.</p>
+</dd>
+<dt>LERewriteRule</dt>
+<dd>
+<p><code>LERewriteRule from-pattern to-pattern [flags]</code></p>
+<p>This directive defines a search-and-replace edit rule that will
+be applied to the text.</p>
+<ul>
+<li>The search string <strong>from-pattern</strong> may be a literal
+string or a regular expression.</li>
+<li>The replacement string <strong>to-pattern</strong> may be a literal
+string, or may include backreferences $1-$9 in the case of a regular
+expression match.</li>
+<li>The optional <strong>Flags</strong> argument may contain any
+combination of:
+<ul class="table">
+<li><strong>R</strong> - This rule is a regular expression
+search-and-replace.</li>
+<li><strong>i</strong> - Use case-insensitive matching on
+<strong>from-pattern</strong>.</li>
+<li><strong>m</strong> - Support multi-line regexp matching
+(in conjunction with the <strong>R</strong> flag and <code>LELineEnd
+None</code>).</li>
+<li><strong>V</strong> - Support environment variables in
+<strong>to-pattern</strong>.  The string <tt>${var}</tt> will be
+replaced with the value of the environment variable <tt>var</tt>.</li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+
+<h2>Availability</h2>
+<p><a href="mod_line_edit.c"
+>mod_line_edit.c source code</a> is available under the
+<a href="http://www.fsf.org/licenses/gpl.html">GNU
+General Public License (GPL)</a>.  As with other opensource modules,
+we can consider alternative licenses by request.</p>
+<p><a href="/registration.html">Registered Users</a>
+may request <strong>binaries</strong> for any available platform.</p>
+<h3>Version 0.9.2</h3>
+<p>Dec. 26<sup>th</sup> 2005: the first public release of
+mod_line_edit is version 0.9.2</p>
+<h3>Version 1.0</h3>
+<p>June 12<sup>th</sup> 2006: added capability to interpolate environment
+variables in rewrite rules.  Bumping version to 1.0 because 0.9 has
+proved stable over six months in the wild.</p>
+
+</div>
+<div id="navbar"><a class="internal" href="./" title="Up">Up</a>
+*
+<a class="internal" href="/" title="WebThing Apache Centre">Home</a>
+*
+<a class="internal" href="/contact.html" title="Contact WebThing">Contact</a>
+*
+<a class="external" href="http://www.webthing.com/" title="WebThing Ltd">Web&#222;ing</a>
+*
+<a class="external" href="http://www.apache.org/" title="Apache Software Foundation">Apache</a></div></body></html>
