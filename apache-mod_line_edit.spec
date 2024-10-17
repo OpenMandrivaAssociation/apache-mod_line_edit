@@ -9,7 +9,7 @@ Version:	1.0.0
 Release:	12
 Group:		System/Servers
 License:	GPL
-URL:		http://apache.webthing.com/mod_line_edit/
+URL:		https://apache.webthing.com/mod_line_edit/
 Source0:	http://apache.webthing.com/mod_line_edit/mod_line_edit.c
 Source1:	%{mod_conf}
 Source2:	http://apache.webthing.com/mod_line_edit/index.html
